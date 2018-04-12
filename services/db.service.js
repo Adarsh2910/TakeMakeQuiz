@@ -28,7 +28,10 @@ class Collection {
 			.then(db => {
 				// TODO Refactor this
 				this.collection = db.collection(collectionName);
+				this.collection.createIndex( { olocation : "2dsphere" } );
+				this.collection.createIndex( { clocation : "2dsphere" } );
 				this.collection.createIndex( { email : 1 }, { unique: true } );
+				this.collection.createIndex( { expireAt : 1 }, { expireAfterSeconds : 5 * 60 } );
 			})
 			.catch(err => {
 				console.log('Error occurred while initializing collection.\n' + err);
@@ -56,18 +59,53 @@ class Collection {
 		let defer = q.defer();
 
 		try {
-			this.collection.find({
-				[attributeName] : filter,
-			})
-			.toArray((err, docs) => {
-			    if(docs.length === 0) {
-					defer.reject("Empty result set");
-				} else {
-					console.log("Found the following records");
-				    console.log(docs);
-				    defer.resolve(docs);
-				}
-			});
+			if(coords) {
+				this.collection.find({
+					'clocation' : {
+						$nearSphere: {
+				           $geometry: {
+				              type : "Point",
+				              coordinates : [ coords.long, coords.lat ]
+				           },
+				           $maxDistance: 3000
+				        }
+					}
+				})
+				.toArray(function(err, docs) {
+					if(!err) {
+						if(docs.length === 0) {
+							defer.reject("Empty result set");
+						} else {
+							console.log("Found the following records");
+						    console.log(docs);
+						    defer.resolve(docs);
+						}	
+					}
+					else {
+						defer.reject(err);
+					}
+				});
+			}
+			else {
+				this.collection.find({
+					[attributeName] : filter,
+				})
+				.toArray((err, docs) => {
+					if(!err) {
+						if(docs.length === 0) {
+							defer.reject("Empty result set");
+						} else {
+							console.log("Found the following records");
+						    console.log(docs);
+						    defer.resolve(docs);
+						}	
+					}
+					else {
+						defer.reject(err);
+					}
+				    
+				});
+			}
 		}
 		catch(error) {
 			console.log(error);

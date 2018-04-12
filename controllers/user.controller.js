@@ -8,18 +8,15 @@ const user = new db.Collection('user');
 
 const q = require('q');
 
-const _checkIfUserExists = (collection,email) => {
-	let defer = q.defer();
-
-	collection.findDocument(email)
+const _checkIfUserExists = (collection, attributeName, email) => {
+	let defer = q.defer();	
+	collection.findDocument(attributeName, email)
 		.then(res => {
-			if(res.length === 0) {
-				defer.resolve(false);
-			}
-			else {
-				defer.resolve(true);
-			}
-		});
+			defer.resolve(true);
+		})
+		.catch(error => {
+			defer.resolve(false);
+		})
 
 	return defer.promise;
 }
@@ -45,7 +42,59 @@ const loginUser = (req, res) => {
 }
 
 const registerUser = (req, res) => {
+	let response = {
+		"success": false,
+		"message": undefined,
+	}
 
+	let entryData = req.body;
+
+	_checkIfUserExists(user, "email", entryData.email)
+		.then(userExists => {
+			if(!userExists) {
+				_hashText(entryData.password)
+					.then((hashedPassword) => {
+						entryData = {
+							...entryData,
+							"password" : hashedPassword  
+						}
+					})
+					.then(() => {
+						_writeToDB(user, entryData)
+						return entryData;
+					})
+					.then(_generateToken)
+					.then((token) => {
+						response = {
+							...response,
+							"success": true,
+							"message": "Registration successful.",
+							"token": token
+						}
+						res.status(200).json(response);
+					})
+					.catch(error => {
+						response = {
+							...response,
+							"message": error
+						}
+						res.status(405).json(response);
+					});
+			} else {
+				response = {
+					...response,
+					"message": "Already registered."
+				}
+				res.status(200).json(response);
+			}
+		})
+}
+
+const signinUser = (req, res) => {
+	let response = {
+		"success": false,
+		"message": undefined,
+	}
 }
 
 module.exports = {
