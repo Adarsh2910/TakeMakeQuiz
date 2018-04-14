@@ -90,11 +90,37 @@ const registerUser = (req, res) => {
 		})
 }
 
-const signinUser = (req, res) => {
+const loginUser = (req, res) => {
+
 	let response = {
 		"success": false,
 		"message": undefined,
+		"token": undefined
 	}
+
+	_findInDB(user, "email", req.body.email)
+		.then((data) => {
+			return _decodePass(`${req.body.password}`, data[0].password)
+		})
+		.then((data) => {
+			return _generateToken({"pass":req.body.password})
+		})
+		.then(data => {
+			response = {
+				...response,
+				"success": true,
+				"message": "User authenticated",
+				"token": data
+			}
+			res.status(200).json(response);
+		})
+		.catch(error => {
+			response = {
+				...response,
+				"message": "User authentication failed"
+			}
+			res.status(403).json(response);
+		})
 }
 
 module.exports = {

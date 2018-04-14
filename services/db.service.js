@@ -55,57 +55,28 @@ class Collection {
 		return defer.promise;
 	}
 
-	findDocument(attributeName, filter, coords) {
+	findDocument(attributeName, filter) {
 		let defer = q.defer();
 
 		try {
-			if(coords) {
-				this.collection.find({
-					'clocation' : {
-						$nearSphere: {
-				           $geometry: {
-				              type : "Point",
-				              coordinates : [ coords.long, coords.lat ]
-				           },
-				           $maxDistance: 3000
-				        }
-					}
-				})
-				.toArray(function(err, docs) {
-					if(!err) {
-						if(docs.length === 0) {
-							defer.reject("Empty result set");
-						} else {
-							console.log("Found the following records");
-						    console.log(docs);
-						    defer.resolve(docs);
-						}	
-					}
-					else {
-						defer.reject(err);
-					}
-				});
-			}
-			else {
-				this.collection.find({
-					[attributeName] : filter,
-				})
-				.toArray((err, docs) => {
-					if(!err) {
-						if(docs.length === 0) {
-							defer.reject("Empty result set");
-						} else {
-							console.log("Found the following records");
-						    console.log(docs);
-						    defer.resolve(docs);
-						}	
-					}
-					else {
-						defer.reject(err);
-					}
-				    
-				});
-			}
+			this.collection.find({
+				[attributeName] : filter,
+			})
+			.toArray((err, docs) => {
+				if(!err) {
+					if(docs.length === 0) {
+						defer.reject("Empty result set");
+					} else {
+						console.log("Found the following records");
+					    console.log(docs);
+					    defer.resolve(docs);
+					}	
+				}
+				else {
+					defer.reject(err);
+				}
+			    
+			});
 		}
 		catch(error) {
 			console.log(error);
