@@ -1,9 +1,9 @@
 'use strict'
 
 const { 
-	loginUser,
-	registerUser,
-	takenQuiz
+	login,
+	register,
+	fetchTakenQuiz
 } = require('../controllers/user.controller');
 
 const {
@@ -13,6 +13,6 @@ const {
 module.exports = app => {
 	app.post('/user/register', register);
 	app.post('/user/login', login);
-	app.get('/user/takenQuiz', isAuthenticated, takenQuiz);
+	app.get('/user/takenQuiz', isAuthenticated, fetchTakenQuiz);
 }
 

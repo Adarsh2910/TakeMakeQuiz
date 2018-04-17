@@ -5,6 +5,7 @@ const bcrypt = require('../services/bcrypt.service');
 const db = require('../services/db.service');
 
 const user = new db.Collection('user');
+const takenQuiz = new db.Collection('taken');
 
 const q = require('q');
 
@@ -37,11 +38,15 @@ const _hashText = (plainText) => {
 	return bcrypt.hashText(plainText);
 }
 
-const loginUser = (req, res) => {
-
+const _fetchData = (collection, attributeName, filter) => {
+	return collection.findDocument(attributeName, filter);
 }
 
-const registerUser = (req, res) => {
+const _decodePass = (text, pass) => {
+	return bcrypt.verifyText(text, pass);
+}
+
+const register = (req, res) => {
 	let response = {
 		"success": false,
 		"message": undefined,
@@ -64,14 +69,13 @@ const registerUser = (req, res) => {
 						return entryData;
 					})
 					.then(_generateToken)
-					.then((token) => {
+					.then((data) => {
 						response = {
 							...response,
 							"success": true,
 							"message": "Registration successful.",
-							"token": token
 						}
-						res.status(200).json(response);
+						res.cookie('token', data).status(200).send(response);
 					})
 					.catch(error => {
 						response = {
@@ -90,29 +94,27 @@ const registerUser = (req, res) => {
 		})
 }
 
-const loginUser = (req, res) => {
+const login = (req, res) => {
 
 	let response = {
 		"success": false,
 		"message": undefined,
-		"token": undefined
 	}
 
-	_findInDB(user, "email", req.body.email)
+	_fetchData(user, "email", req.body.email)
 		.then((data) => {
 			return _decodePass(`${req.body.password}`, data[0].password)
 		})
 		.then((data) => {
-			return _generateToken({"pass":req.body.password})
+			return _generateToken({"email":req.body.email})
 		})
 		.then(data => {
 			response = {
 				...response,
 				"success": true,
 				"message": "User authenticated",
-				"token": data
 			}
-			res.status(200).json(response);
+			res.cookie('token', data).status(200).json(response);
 		})
 		.catch(error => {
 			response = {
@@ -123,7 +125,36 @@ const loginUser = (req, res) => {
 		})
 }
 
+const fetchTakenQuiz = (req, res) => {
+	let response = {
+		"success": false,
+		"message": null
+	}
+	_fetchData(takenQuiz, "email", req.body.data)
+		.then((data) => {
+			response = {
+				...response,
+				"success": true,
+				"message": "User data retrieved",
+				...data
+			}
+			res.status(200).json(response);
+		})
+		.catch(error => {
+			response = {
+				...response,
+				"message": "Error occured while fetching user data",
+				error
+			}
+			res.status(500).json(response);
+		});
+
+}
+
+
+
 module.exports = {
-	loginUser,
-	registerUser
+	login,
+	register,
+	fetchTakenQuiz
 }
