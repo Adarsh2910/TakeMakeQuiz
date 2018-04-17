@@ -73,8 +73,9 @@ const register = (req, res) => {
 							...response,
 							"success": true,
 							"message": "Registration successful.",
+							"redirect": "/takeMake"
 						}
-						res.cookie('token', data).status(200).send(response).redirect('/takeMake');;
+						res.cookie('token', data).status(200).send(response);
 					})
 					.catch(error => {
 						response = {
@@ -112,8 +113,9 @@ const login = (req, res) => {
 				...response,
 				"success": true,
 				"message": "User authenticated",
+				"redirect": '/takeMake'
 			}
-			res.cookie('token', data).status(200).json(response).redirect('/takeMake');
+			res.cookie('token', data).status(200).json(response);
 		})
 		.catch(error => {
 			response = {
