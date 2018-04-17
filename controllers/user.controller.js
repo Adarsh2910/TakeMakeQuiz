@@ -142,7 +142,7 @@ const fetchTakenQuiz = (req, res) => {
 				...response,
 				"success": true,
 				"message": "User data retrieved",
-				...data
+				data
 			}
 			res.status(200).json(response);
 		})
@@ -212,7 +212,7 @@ const fetchCreatedByUser = (req, res) => {
 				...response,
 				"success": true,
 				"message": "User's quiz retrieved",
-				...data
+				data
 			}
 			res.status(200).json(response);
 		})
