@@ -80,28 +80,46 @@ class Collection {
 		return defer.promise;
 	}
 
-	updateDocument(filter, attributeName, newAttribute) {
+	updateDocument(filter, attributeName, newAttribute, isToBePushed) {
 		let defer = q.defer();
 
-
-		this.collection.updateOne(
-			{ 'email' : filter },
-			{
-				$set: { [attributeName] : newAttribute },
-				$currentDate: { lastModified: true }
-			},
-			{ upsert : true },
-			(error, response) => {
-				if(!error) {
-					console.log("Document updated in " + this.collectionName);
-					defer.resolve({"success":true, "error": null});
+		if(!isToBePushed) {
+			this.collection.updateOne(
+				{ 'email' : filter },
+				{
+					$set: { [attributeName] : newAttribute },
+					$currentDate: { lastModified: true }
+				},
+				{ upsert : true },
+				(error, response) => {
+					if(!error) {
+						console.log("Document updated in " + this.collectionName);
+						defer.resolve({"success":true, "error": null});
+					}
+					else {
+						console.log("Error occurred while updating document.\n" + error);
+						defer.reject({"success": false, "error": error});
+					}
 				}
-				else {
-					console.log("Error occurred while updating document.\n" + error);
-					defer.reject({"success": false, "error": error});
+			)
+		}
+		else {
+			this.collection.update(
+				{'email' : filter},
+				{ $push : { attributeName: newAttribute } },
+				{ upsert : true },
+				(error, Response) => {
+					if(!error) {
+						console.log("Document updated in " + this.collectionName);
+						defer.resolve({"success":true, "error": null});
+					}
+					else {
+						console.log("Error occurred while updating document.\n" + error);
+						defer.reject({"success": false, "error": error});
+					}
 				}
-			}
-		)
+			)
+		}
 
 		return defer.promise;
 	}
