@@ -2,11 +2,17 @@
 
 const { 
 	loginUser,
-	registerUser
+	registerUser,
+	takenQuiz
 } = require('../controllers/user.controller');
 
+const {
+	isAuthenticated
+} = require('../middlewares/isAuthenticated');
+
 module.exports = app => {
-	app.post('/user/register', registerUser);
-	app.post('/user/login', loginUser);
+	app.post('/user/register', register);
+	app.post('/user/login', login);
+	app.get('/user/takenQuiz', isAuthenticated, takenQuiz);
 }
 
