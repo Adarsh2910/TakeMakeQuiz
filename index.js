@@ -3,6 +3,7 @@
 const express = require('express');
 const app = express();
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { exec } = require('child_process');
@@ -22,6 +23,12 @@ app.use(cookieParser());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('static'));
+app.use(express.static('res'));
+
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname + '/index.html'));
+});
 
 require('./routes/users.routes.js')(app);
 
