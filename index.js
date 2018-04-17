@@ -27,7 +27,7 @@ app.use(express.static('static'));
 app.use(express.static('res'));
 
 app.get('/', function(req, res) {
-    if(req.body.data) {
+    if(req.cookies.token) {
         res.redirect('/takeMake');    
     }
     else {
@@ -36,11 +36,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/takeMake', function(req, res) {
-    if(req.body.data) {
-        res.redirect('/takeMake');    
+    if(req.cookies.token) {
+        res.sendFile(path.join(__dirname + '/takemake.html'));
     }
     else {
-        res.sendFile(path.join(__dirname + '/takemake.html'));
+        res.redirect('/');    
     }
 });
 
