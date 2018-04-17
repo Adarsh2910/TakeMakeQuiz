@@ -26,12 +26,8 @@ class Collection {
 		this.collectionName = collectionName;
 		connectToDB()
 			.then(db => {
-				// TODO Refactor this
 				this.collection = db.collection(collectionName);
-				this.collection.createIndex( { olocation : "2dsphere" } );
-				this.collection.createIndex( { clocation : "2dsphere" } );
 				this.collection.createIndex( { email : 1 }, { unique: true } );
-				this.collection.createIndex( { expireAt : 1 }, { expireAfterSeconds : 5 * 60 } );
 			})
 			.catch(err => {
 				console.log('Error occurred while initializing collection.\n' + err);
@@ -70,12 +66,12 @@ class Collection {
 						console.log("Found the following records");
 					    console.log(docs);
 					    defer.resolve(docs);
-					}	
+					}
 				}
 				else {
 					defer.reject(err);
 				}
-			    
+
 			});
 		}
 		catch(error) {

@@ -4,12 +4,12 @@ const jwt = require('../services/jwt.service');
 const bcrypt = require('../services/bcrypt.service');
 const db = require('../services/db.service');
 
-const user = new db.Collection('user');
+const quiz = new db.Collection('quiz');
 
 const q = require('q');
 
 const _checkIfUserExists = (collection, attributeName, email) => {
-	let defer = q.defer();	
+	let defer = q.defer();
 	collection.findDocument(attributeName, email)
 		.then(res => {
 			defer.resolve(true);
@@ -37,9 +37,36 @@ const _hashText = (plainText) => {
 	return bcrypt.hashText(plainText);
 }
 
-const loginUser = (req, res) => {
+const getQuizzesTaken = (req, res) => {
+	let response = {
+		"success" : false,
+		"quizzes" : undefined,
+		"error" : undefined,
+		"message" : undefined
+	}
 
+	quiz.findDocument('email', req.body.data.email)
+		.then(results => {
+			resposne = {
+				...response,
+				success : true,
+				quizzes : results.quizzes,
+				message : 'Fetched quizzes taken.'
+			}
+
+			res.status(200).json(response);
+		})
+		.catch(error => {
+			resposne = {
+				...response,
+				error,
+				message : 'Failed to fetch quizzes taken.'
+			}
+
+			res.status(200).json(response);
+		})
 }
+
 
 const registerUser = (req, res) => {
 	let response = {
@@ -56,7 +83,7 @@ const registerUser = (req, res) => {
 					.then((hashedPassword) => {
 						entryData = {
 							...entryData,
-							"password" : hashedPassword  
+							"password" : hashedPassword
 						}
 					})
 					.then(() => {
@@ -71,7 +98,7 @@ const registerUser = (req, res) => {
 							"message": "Registration successful.",
 							"token": token
 						}
-						res.status(200).json(response);
+						res.status(200).cookie(response);
 					})
 					.catch(error => {
 						response = {
@@ -112,7 +139,7 @@ const loginUser = (req, res) => {
 				"message": "User authenticated",
 				"token": data
 			}
-			res.status(200).json(response);
+			res.status(200).cookie(response);
 		})
 		.catch(error => {
 			response = {
