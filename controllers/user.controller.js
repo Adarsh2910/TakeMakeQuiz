@@ -3,7 +3,6 @@
 const jwt = require('../services/jwt.service');
 const bcrypt = require('../services/bcrypt.service');
 const db = require('../services/db.service');
-
 const user = new db.Collection('user');
 const takenQuiz = new db.Collection('taken');
 
@@ -75,7 +74,7 @@ const register = (req, res) => {
 							"success": true,
 							"message": "Registration successful.",
 						}
-						res.cookie('token', data).status(200).send(response);
+						res.cookie('token', data).status(200).send(response).redirect('/takeMake');;
 					})
 					.catch(error => {
 						response = {
@@ -114,7 +113,7 @@ const login = (req, res) => {
 				"success": true,
 				"message": "User authenticated",
 			}
-			res.cookie('token', data).status(200).json(response);
+			res.cookie('token', data).status(200).json(response).redirect('/takeMake');
 		})
 		.catch(error => {
 			response = {
@@ -126,10 +125,12 @@ const login = (req, res) => {
 }
 
 const fetchTakenQuiz = (req, res) => {
+	
 	let response = {
 		"success": false,
 		"message": null
 	}
+
 	_fetchData(takenQuiz, "email", req.body.data)
 		.then((data) => {
 			response = {
@@ -151,7 +152,32 @@ const fetchTakenQuiz = (req, res) => {
 
 }
 
+const fetchCreatedByUser = (req, res) => {
 
+	let response = {
+		"success": false,
+		"message": null
+	}
+
+	_fetchData(userQuiz, "email", req.body.data)
+		.then(data => {
+			response = {
+				...response,
+				"success": true,
+				"message": "User's quiz retrieved",
+				...data
+			}
+			res.status(200).json(response);
+		})
+		.catch(error => {
+			response = {
+				...response,
+				"message": "Error occured while fetching user data",
+				error
+			}
+			res.status(500).json(response);
+		})
+}
 
 module.exports = {
 	login,

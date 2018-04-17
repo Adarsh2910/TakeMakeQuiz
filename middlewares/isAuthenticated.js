@@ -31,7 +31,7 @@ const isAuthenticated = (req, res, next) => {
             message : 'Cookie undefined.'
         }
 
-        res.status(403).json(response);
+        res.status(403).json(response).redirect('/');
     }
 }
 
