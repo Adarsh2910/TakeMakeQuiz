@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { exec } = require('child_process');
 const db = require('./services/db.service');
-const { isAuthenticated } = require('middlewares/isAuthenticated');
 
 db.connectToDB()
 	.then(db => {
@@ -27,7 +26,7 @@ app.use(bodyParser.json());
 app.use(express.static('static'));
 app.use(express.static('res'));
 
-app.get('/', isAuthenticated, function(req, res) {
+app.get('/', function(req, res) {
     if(req.body.data) {
         res.redirect('/takeMake');    
     }
@@ -36,8 +35,13 @@ app.get('/', isAuthenticated, function(req, res) {
     }
 });
 
-app.get('/takeMake', isAuthenticated, function(req, res) {
-    res.sendFile(path.join(__dirname + '/takemake.html'));
+app.get('/takeMake', function(req, res) {
+    if(req.body.data) {
+        res.redirect('/takeMake');    
+    }
+    else {
+        res.sendFile(path.join(__dirname + '/takemake.html'));
+    }
 });
 
 require('./routes/users.routes.js')(app);
