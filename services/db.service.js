@@ -62,8 +62,6 @@ class Collection {
 						if(docs.length === 0) {
 							defer.reject("Empty result set");
 						} else {
-							console.log("Found the following records");
-						    console.log(docs);
 						    defer.resolve(docs);
 						}	
 					}
@@ -106,7 +104,7 @@ class Collection {
 		else {
 			this.collection.update(
 				{'email' : filter},
-				{ $push : { attributeName: newAttribute } },
+				{ $push : { [attributeName]: newAttribute } },
 				{ upsert : true },
 				(error, Response) => {
 					if(!error) {
