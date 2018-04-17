@@ -3,9 +3,11 @@
 const jwt = require('../services/jwt.service');
 const bcrypt = require('../services/bcrypt.service');
 const db = require('../services/db.service');
-
+var uniqid = require('uniqid');
 const user = new db.Collection('user');
 const takenQuiz = new db.Collection('taken');
+const quiz = new db.Collection('quiz');
+const userQuiz = new db.Collection('userQuiz')
 
 const q = require('q');
 
@@ -26,8 +28,8 @@ const _writeToDB = (collection, data ) => {
 	return collection.addDocument(data);
 }
 
-const _updateDB = (collection, filter, attributeName, data ) => {
-	return collection.updateDocument(filter, attributeName, data)
+const _updateDB = (collection, filter, attributeName, data, isToBePushed ) => {
+	return collection.updateDocument(filter, attributeName, data, isToBePushed)
 }
 
 const _generateToken = (payload, expiry) => {
@@ -151,10 +153,53 @@ const fetchTakenQuiz = (req, res) => {
 
 }
 
+const addQuiz = (req, res) => {
+	
+	let response = {
+		"success": false,
+		"message": null
+	};
+
+	let quizId = uniqid(req.body.quizName)
+
+	let dataForQuizCollection = {
+		"quizId" : quizId,
+		"quizname" : req.body.quizName,
+		"questions" : req.body.questions,
+		"quizTime" : req.body.quizTime
+	};
+
+	let dataForUserQuizCollection = {
+		"quizId" : quizId,
+		"quizName" : req.body.quizName,
+		"people" : []
+	};
+
+	_writeToDB(quiz, dataForQuizCollection)
+			return _updateDB(userQuiz, req.body.data, "quizes", dataForUserQuizCollection , true)
+		.then(() => {
+			response = {
+				...response,
+				"success": true,
+				"message": "Quiz Added",
+			}
+			res.status(200).json(response);
+		})
+		.catch(() => {
+			response = {
+				...response,
+				"success": false,
+				"message": "Error while updating user's quiz",
+			}
+			res.status(500).json(response);
+		})
+}
+
 
 
 module.exports = {
 	login,
 	register,
-	fetchTakenQuiz
+	fetchTakenQuiz,
+	addQuiz
 }

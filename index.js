@@ -12,6 +12,8 @@ db.connectToDB()
 	.then(db => {
         let user = db.collection('user');
         let taken = db.collection('taken');
+        let quiz = db.collection('quiz');
+        let userQuiz = db.collection('userQuiz');
 		user.createIndex( { email : 1 }, { unique: true } );
 	})
 	.catch(err => {

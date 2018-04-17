@@ -3,7 +3,8 @@
 const { 
 	login,
 	register,
-	fetchTakenQuiz
+	fetchTakenQuiz,
+	addQuiz
 } = require('../controllers/user.controller');
 
 const {
@@ -14,5 +15,6 @@ module.exports = app => {
 	app.post('/user/register', register);
 	app.post('/user/login', login);
 	app.get('/user/takenQuiz', isAuthenticated, fetchTakenQuiz);
+	app.post('/user/addQuiz', isAuthenticated, addQuiz)
 }
 
