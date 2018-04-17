@@ -76,6 +76,7 @@ const register = (req, res) => {
 							...response,
 							"success": true,
 							"message": "Registration successful.",
+							"redirect": "/takeMake"
 						}
 						res.cookie('token', data).status(200).send(response);
 					})
@@ -115,6 +116,7 @@ const login = (req, res) => {
 				...response,
 				"success": true,
 				"message": "User authenticated",
+				"redirect": '/takeMake'
 			}
 			res.cookie('token', data).status(200).json(response);
 		})
@@ -128,10 +130,12 @@ const login = (req, res) => {
 }
 
 const fetchTakenQuiz = (req, res) => {
+	
 	let response = {
 		"success": false,
 		"message": null
 	}
+
 	_fetchData(takenQuiz, "email", req.body.data)
 		.then((data) => {
 			response = {
@@ -195,7 +199,32 @@ const addQuiz = (req, res) => {
 		})
 }
 
+const fetchCreatedByUser = (req, res) => {
 
+	let response = {
+		"success": false,
+		"message": null
+	}
+
+	_fetchData(userQuiz, "email", req.body.data)
+		.then(data => {
+			response = {
+				...response,
+				"success": true,
+				"message": "User's quiz retrieved",
+				...data
+			}
+			res.status(200).json(response);
+		})
+		.catch(error => {
+			response = {
+				...response,
+				"message": "Error occured while fetching user data",
+				error
+			}
+			res.status(500).json(response);
+		})
+}
 
 module.exports = {
 	login,
