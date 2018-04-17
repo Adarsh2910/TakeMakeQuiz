@@ -13,46 +13,72 @@ const q = require('q');
 
 const _checkIfUserExists = (collection, attributeName, email) => {
 	let defer = q.defer();	
+
 	collection.findDocument(attributeName, email)
 		.then(res => {
 			defer.resolve(true);
 		})
 		.catch(error => {
 			defer.resolve(false);
-		})
+		});
 
 	return defer.promise;
-}
+};
 
 const _writeToDB = (collection, data ) => {
 	return collection.addDocument(data);
-}
+};
 
-const _updateDB = (collection, filter, attributeName, data, isToBePushed ) => {
-	return collection.updateDocument(filter, attributeName, data, isToBePushed)
-}
+const _updateDB = (collection, filter, attributeName, data, isToBePushedInArray ) => {
+	return collection.updateDocument(filter, attributeName, data, isToBePushedInArray)
+};
 
 const _generateToken = (payload, expiry) => {
 	return jwt.getToken(payload, expiry);
-}
+};
 
 const _hashText = (plainText) => {
 	return bcrypt.hashText(plainText);
-}
+};
 
 const _fetchData = (collection, attributeName, filter) => {
-	return collection.findDocument(attributeName, filter);
-}
+	let defer = q.defer();
+
+	collection.findDocument(attributeName, filter)
+		.then((data) => {
+			defer.resolve(data);
+		})
+		.catch((error) => {
+			defer.resolve(false);
+		});
+
+	return defer.promise;
+};
 
 const _decodePass = (text, pass) => {
 	return bcrypt.verifyText(text, pass);
-}
+};
+
+const _findInDbArray = (quiz,filter) => {
+	let defer = q.defer();
+	
+	var index = quiz.find(function(quizObj, i){
+	  if(quizObj.quizID === filter){
+	    defer.resolve(true)
+	  }
+	  else {
+	  	defer.resolve(false);
+	  }
+	});
+
+	return defer.promise;
+};
 
 const register = (req, res) => {
 	let response = {
 		"success": false,
 		"message": undefined,
-	}
+	};
 
 	let entryData = req.body;
 
@@ -64,10 +90,10 @@ const register = (req, res) => {
 						entryData = {
 							...entryData,
 							"password" : hashedPassword  
-						}
+						};
 					})
 					.then(() => {
-						_writeToDB(user, entryData)
+						_writeToDB(user, entryData);
 						return entryData;
 					})
 					.then(_generateToken)
@@ -77,39 +103,41 @@ const register = (req, res) => {
 							"success": true,
 							"message": "Registration successful.",
 							"redirect": "/takeMake"
-						}
+						};
 						res.cookie('token', data).status(200).send(response);
 					})
 					.catch(error => {
 						response = {
 							...response,
 							"message": error
-						}
+						};
 						res.status(405).json(response);
 					});
 			} else {
 				response = {
 					...response,
 					"message": "Already registered."
-				}
+				};
 				res.status(200).json(response);
-			}
-		})
-}
+			};
+		});
+};
 
 const login = (req, res) => {
 
 	let response = {
 		"success": false,
 		"message": undefined,
-	}
+	};
 
 	_fetchData(user, "email", req.body.email)
-		.then((data) => {
-			return _decodePass(`${req.body.password}`, data[0].password)
+		.then(data => {
+			console.log(req.body.password);
+			console.log(data);
+			return _decodePass(`${req.body.password}`, data[0].password);
 		})
 		.then((data) => {
-			return _generateToken({"email":req.body.email})
+			return _generateToken({"email":req.body.email});
 		})
 		.then(data => {
 			response = {
@@ -117,33 +145,46 @@ const login = (req, res) => {
 				"success": true,
 				"message": "User authenticated",
 				"redirect": '/takeMake'
-			}
+			};
 			res.cookie('token', data).status(200).json(response);
 		})
 		.catch(error => {
 			response = {
 				...response,
 				"message": "User authentication failed"
-			}
+			};
 			res.status(403).json(response);
-		})
-}
+		});
+};
 
 const fetchTakenQuiz = (req, res) => {
 	
 	let response = {
 		"success": false,
 		"message": null
-	}
+	};
 
 	_fetchData(takenQuiz, "email", req.body.data)
-		.then((data) => {
+		.then((resp) => {
 			response = {
-				...response,
-				"success": true,
-				"message": "User data retrieved",
-				data
+					...response,
+					"success": true,
+					"message": "Empty Set",
+				};
+			if(resp) {
+				response = {
+					...response,
+					"message": "User data retrieved",
+					"quizes": resp[0].quizes
+				};	
 			}
+			else {
+				response = {
+					...response,
+					"success": false,
+					"message": resp
+				};		
+			}			
 			res.status(200).json(response);
 		})
 		.catch(error => {
@@ -151,11 +192,11 @@ const fetchTakenQuiz = (req, res) => {
 				...response,
 				"message": "Error occured while fetching user data",
 				error
-			}
+			};
 			res.status(500).json(response);
 		});
 
-}
+};
 
 const addQuiz = (req, res) => {
 	
@@ -164,7 +205,9 @@ const addQuiz = (req, res) => {
 		"message": null
 	};
 
-	let quizId = uniqid(req.body.quizName)
+	console.log("here");
+
+	let quizId = uniqid(req.body.quizName);
 
 	let dataForQuizCollection = {
 		"quizId" : quizId,
@@ -186,7 +229,7 @@ const addQuiz = (req, res) => {
 				...response,
 				"success": true,
 				"message": "Quiz Added",
-			}
+			};
 			res.status(200).json(response);
 		})
 		.catch(() => {
@@ -194,17 +237,17 @@ const addQuiz = (req, res) => {
 				...response,
 				"success": false,
 				"message": "Error while updating user's quiz",
-			}
+			};
 			res.status(500).json(response);
-		})
-}
+		});
+};
 
 const fetchCreatedByUser = (req, res) => {
 
 	let response = {
 		"success": false,
 		"message": null
-	}
+	};
 
 	_fetchData(userQuiz, "email", req.body.data)
 		.then(data => {
@@ -213,7 +256,7 @@ const fetchCreatedByUser = (req, res) => {
 				"success": true,
 				"message": "User's quiz retrieved",
 				data
-			}
+			};
 			res.status(200).json(response);
 		})
 		.catch(error => {
@@ -221,14 +264,80 @@ const fetchCreatedByUser = (req, res) => {
 				...response,
 				"message": "Error occured while fetching user data",
 				error
+			};
+			res.status(500).json(response);
+		});
+};
+
+const takeQuiz = (req, res) => {
+
+	let response = {
+		"success": false,
+		"message": null
+	}
+
+	_fetchData(takenQuiz, "email", req.body.data)
+		.then(resp => {
+			if(resp) {
+				let dataForTakenCollection = {
+					"quizID" : req.body.quizID,
+					"quizName" : req.body.quizName,
+					"score" : 0,
+					"noOfTries" : 0,
+					"quizMaker" : req.body.quizMaker
+				}
+
+				_findInDbArray(resp[0].quizes, req.body.quizID)
+					.then(resp => {
+						if(!resp) {
+							return _updateDB(takenQuiz, req.body.data, 'quizes', dataForTakenCollection, true)	
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					})
 			}
+			else {
+				let data = {
+					"email": req.body.data,
+					"quizes": [{
+						"quizID" : req.body.quizID,
+						"quizName" : req.body.quizName,
+						"score" : 0,
+						"noOfTries" : 0,
+						"quizMaker" : req.body.quizMaker
+					}]
+				}
+				return _writeToDB(takenQuiz, data)
+			}	
+		})
+		.then((data) => {
+			return _fetchData(quiz, "quizId", `${req.body.quizID}`);
+		})
+		.then(data => {
+			response = {
+				...response,
+				"success": true,
+				"message": "Questions retrieved",
+				data
+			}
+			res.status(200).json(response);
+		})
+		.catch(error => {
+			response = {
+				...response,
+				"message": "Error occured while fetching quizes",
+				error
+			};
 			res.status(500).json(response);
 		})
+		
 }
 
 module.exports = {
 	login,
 	register,
 	fetchTakenQuiz,
-	addQuiz
+	addQuiz,
+	takeQuiz
 }
