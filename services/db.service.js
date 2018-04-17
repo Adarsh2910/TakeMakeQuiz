@@ -3,12 +3,12 @@
 const mongo = require('mongodb').MongoClient;
 const assert = require('assert');
 const q = require('q');
-const url = require('../config/config').dbCredentials();
+const url = require('../config/config');
 
 const connectToDB = () => {
 	let defer = q.defer();
 
-	mongo.connect(url, (err, db) => {
+	mongo.connect(url.dbCredentials, (err, db) => {
 		if(!err) {
 			defer.resolve(db);
 		}
@@ -26,12 +26,7 @@ class Collection {
 		this.collectionName = collectionName;
 		connectToDB()
 			.then(db => {
-				// TODO Refactor this
 				this.collection = db.collection(collectionName);
-				this.collection.createIndex( { olocation : "2dsphere" } );
-				this.collection.createIndex( { clocation : "2dsphere" } );
-				this.collection.createIndex( { email : 1 }, { unique: true } );
-				this.collection.createIndex( { expireAt : 1 }, { expireAfterSeconds : 5 * 60 } );
 			})
 			.catch(err => {
 				console.log('Error occurred while initializing collection.\n' + err);
@@ -59,24 +54,23 @@ class Collection {
 		let defer = q.defer();
 
 		try {
-			this.collection.find({
-				[attributeName] : filter,
-			})
-			.toArray((err, docs) => {
-				if(!err) {
-					if(docs.length === 0) {
-						defer.reject("Empty result set");
-					} else {
-						console.log("Found the following records");
-					    console.log(docs);
-					    defer.resolve(docs);
-					}	
-				}
-				else {
-					defer.reject(err);
-				}
-			    
-			});
+				this.collection.find({
+					[attributeName] : filter,
+				})
+				.toArray((err, docs) => {
+					if(!err) {
+						if(docs.length === 0) {
+							defer.reject("Empty result set");
+						} else {
+							console.log("Found the following records");
+						    console.log(docs);
+						    defer.resolve(docs);
+						}	
+					}
+					else {
+						defer.reject(err);
+					} 
+				});
 		}
 		catch(error) {
 			console.log(error);
@@ -111,9 +105,9 @@ class Collection {
 
 		return defer.promise;
 	}
-
 }
 
 module.exports = {
-	Collection
+	Collection, 
+	connectToDB
 }
