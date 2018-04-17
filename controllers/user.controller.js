@@ -283,7 +283,7 @@ const takeQuiz = (req, res) => {
 					"quizID" : req.body.quizID,
 					"quizName" : req.body.quizName,
 					"score" : 0,
-					"noOfTries" : 0,
+					"noOfTries" : 1,
 					"quizMaker" : req.body.quizMaker
 				}
 
@@ -304,7 +304,7 @@ const takeQuiz = (req, res) => {
 						"quizID" : req.body.quizID,
 						"quizName" : req.body.quizName,
 						"score" : 0,
-						"noOfTries" : 0,
+						"noOfTries" : 1,
 						"quizMaker" : req.body.quizMaker
 					}]
 				}
