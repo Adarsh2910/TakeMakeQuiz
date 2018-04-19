@@ -41,10 +41,10 @@ const _hashText = (plainText) => {
 	return bcrypt.hashText(plainText);
 };
 
-const _fetchData = (collection, attributeName, filter) => {
+const _fetchData = (collection, attributeName, filter, offset) => {
 	let defer = q.defer();
 
-	collection.findDocument(attributeName, filter)
+	collection.findDocument(attributeName, filter, offset)
 		.then((data) => {
 			defer.resolve(data);
 		})
@@ -205,8 +205,6 @@ const addQuiz = (req, res) => {
 		"message": null
 	};
 
-	console.log("here");
-
 	let quizId = uniqid(req.body.quizName);
 
 	let dataForQuizCollection = {
@@ -219,6 +217,7 @@ const addQuiz = (req, res) => {
 	let dataForUserQuizCollection = {
 		"quizId" : quizId,
 		"quizName" : req.body.quizName,
+		"quizMaker" : req.body.data,
 		"people" : []
 	};
 
@@ -330,8 +329,34 @@ const takeQuiz = (req, res) => {
 				error
 			};
 			res.status(500).json(response);
+		});		
+};
+
+const fetchAllQuiz = (req, res) => {
+	
+	let response = {
+		"success" : false,
+		"message" : null
+	}
+	_fetchData(quiz, undefined, undefined, parseInt(req.query.offset))
+		.then(data => {
+			response = {
+				...response,
+				"success": true,
+				"message": "Fetched Quizes",
+				data
+			}
+			res.status(200).json(response);
 		})
-		
+		.catch(error => {
+			response = {
+				...response,
+				"message": "Error occured while fetching quizes",
+				error
+			};
+
+			res.status(500).json(response);
+		});
 }
 
 module.exports = {
@@ -339,5 +364,6 @@ module.exports = {
 	register,
 	fetchTakenQuiz,
 	addQuiz,
-	takeQuiz
+	takeQuiz,
+	fetchAllQuiz
 }
