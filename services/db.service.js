@@ -50,10 +50,10 @@ class Collection {
 		return defer.promise;
 	}
 
-	findDocument(attributeName, filter) {
+	findDocument(attributeName, filter, offset = undefined) {
 		let defer = q.defer();
-
 		try {
+			if(offset===undefined) {
 				this.collection.find({
 					[attributeName] : filter,
 				})
@@ -69,6 +69,24 @@ class Collection {
 						defer.reject(err);
 					} 
 				});
+			}
+			else {
+				this.collection.find()
+				.limit(10)
+				.skip(offset)
+				.toArray((err,docs) => {
+					if(!err) {
+						if(docs.length === 0) {
+							defer.reject("Empty result set");
+						} else {
+						    defer.resolve(docs);
+						}	
+					}
+					else {
+						defer.reject(err);
+					} 
+				});
+			}
 		}
 		catch(error) {
 			console.log(error);
