@@ -33,7 +33,7 @@ app.get('/', function(req, res) {
         res.redirect('/takeMake');    
     }
     else {
-        res.sendFile(path.join(__dirname + '/index.html'));
+        res.sendFile(path.join(__dirname + '/login.html'));
     }
 });
 
