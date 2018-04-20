@@ -247,15 +247,28 @@ const fetchCreatedByUser = (req, res) => {
 		"success": false,
 		"message": null
 	};
-
+	
 	_fetchData(userQuiz, "email", req.body.data)
-		.then(data => {
+		.then((resp) => {
 			response = {
-				...response,
-				"success": true,
-				"message": "User's quiz retrieved",
-				data
-			};
+					...response,
+					"success": true,
+					"message": "Empty Set",
+				};
+			if(resp) {
+				response = {
+					...response,
+					"message": "User data retrieved",
+					"quizes": resp[0].quizes
+				};	
+			}
+			else {
+				response = {
+					...response,
+					"success": false,
+					"message": resp
+				};		
+			}			
 			res.status(200).json(response);
 		})
 		.catch(error => {
