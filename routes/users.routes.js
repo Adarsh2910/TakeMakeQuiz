@@ -6,7 +6,8 @@ const {
 	fetchTakenQuiz,
 	addQuiz,
 	takeQuiz,
-	fetchAllQuiz
+	fetchAllQuiz,
+	fetchCreatedByUser
 } = require('../controllers/user.controller');
 
 const {
@@ -16,9 +17,10 @@ const {
 module.exports = app => {
 	app.post('/user/register', register);
 	app.post('/user/login', login);
-	app.get('/user/quiz/taken', isAuthenticated, fetchTakenQuiz);
+	app.get('/user/quiz/taken/fetch', isAuthenticated, fetchTakenQuiz);
 	app.post('/user/quiz/add', isAuthenticated, addQuiz);
 	app.post('/user/quiz/take', isAuthenticated, takeQuiz);
-	app.get('/user/quiz/fetch', isAuthenticated, fetchAllQuiz)
+	app.get('/user/quiz/fetch', isAuthenticated, fetchAllQuiz);
+	app.get('/user/quiz/created/fetch', isAuthenticated, fetchCreatedByUser)
 }
 

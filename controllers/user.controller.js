@@ -365,5 +365,6 @@ module.exports = {
 	fetchTakenQuiz,
 	addQuiz,
 	takeQuiz,
-	fetchAllQuiz
+	fetchAllQuiz,
+	fetchCreatedByUser
 }
