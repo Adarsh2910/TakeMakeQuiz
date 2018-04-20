@@ -29,6 +29,7 @@ app.use(express.static('static'));
 app.use(express.static('res'));
 
 app.get('/', function(req, res) {
+    res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     if(req.cookies.token) {
         res.redirect('/takeMake');    
     }
