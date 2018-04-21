@@ -289,7 +289,7 @@ const takeQuiz = (req, res) => {
 	}
 
 
-	_fetchData(quiz, "quizId", `${req.body.quizID}`);
+	_fetchData(quiz, "quizId", `${req.body.quizID}`)
 		.then(data => {
 			response = {
 				...response,
