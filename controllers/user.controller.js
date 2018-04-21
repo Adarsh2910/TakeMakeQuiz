@@ -288,44 +288,8 @@ const takeQuiz = (req, res) => {
 		"message": null
 	}
 
-	_fetchData(takenQuiz, "email", req.body.data)
-		.then(resp => {
-			if(resp) {
-				let dataForTakenCollection = {
-					"quizID" : req.body.quizID,
-					"quizName" : req.body.quizName,
-					"score" : 0,
-					"noOfTries" : 1,
-					"quizMaker" : req.body.quizMaker
-				}
 
-				_findInDbArray(resp[0].quizes, req.body.quizID)
-					.then(resp => {
-						if(!resp) {
-							return _updateDB(takenQuiz, req.body.data, 'quizes', dataForTakenCollection, true)	
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					})
-			}
-			else {
-				let data = {
-					"email": req.body.data,
-					"quizes": [{
-						"quizID" : req.body.quizID,
-						"quizName" : req.body.quizName,
-						"score" : 0,
-						"noOfTries" : 1,
-						"quizMaker" : req.body.quizMaker
-					}]
-				}
-				return _writeToDB(takenQuiz, data)
-			}	
-		})
-		.then((data) => {
-			return _fetchData(quiz, "quizId", `${req.body.quizID}`);
-		})
+	_fetchData(quiz, "quizId", `${req.body.quizID}`);
 		.then(data => {
 			response = {
 				...response,
@@ -344,6 +308,7 @@ const takeQuiz = (req, res) => {
 			res.status(500).json(response);
 		});		
 };
+
 
 const fetchAllQuiz = (req, res) => {
 	
@@ -372,6 +337,67 @@ const fetchAllQuiz = (req, res) => {
 		});
 }
 
+const finishQuiz = (req, res) => {
+
+	let response = {
+		"success": false,
+		"message": null
+	}
+
+	_fetchData(takenQuiz, "email", req.body.data)
+		.then(resp => {
+			if(resp) {
+				let dataForTakenCollection = {
+					"quizID" : req.body.quizID,
+					"quizName" : req.body.quizName,
+					"score" : req.body.score,
+					"quizMaker" : req.body.quizMaker
+				}
+
+				_findInDbArray(resp[0].quizes, req.body.quizID)
+					.then(resp => {
+						if(!resp) {
+							return _updateDB(takenQuiz, req.body.data, 'quizes', dataForTakenCollection, true)	
+						}
+					})
+					.catch(error => {
+						console.log(error);
+					})
+			}
+			else {
+				let data = {
+					"email": req.body.data,
+					"quizes": [{
+						"quizID" : req.body.quizID,
+						"quizName" : req.body.quizName,
+						"score" : req.body.score,
+						"quizMaker" : req.body.quizMaker
+					}]
+				}
+				return _writeToDB(takenQuiz, data)
+			}	
+		})
+		.then(() => {
+			//add quiz takers email id to quiz creators collection
+			return 
+		})
+		.then(() => {
+			response = {
+				...response,
+				"success": true,
+				"message": "Score Updated"
+			}
+			res.status(200).json(response);
+		})
+		.catch(error => {
+			response = {
+				...response,
+				"message": "Score update failed"
+			}
+			res.status(403).json(response);
+		})
+}
+
 module.exports = {
 	login,
 	register,
@@ -379,5 +405,6 @@ module.exports = {
 	addQuiz,
 	takeQuiz,
 	fetchAllQuiz,
-	fetchCreatedByUser
+	fetchCreatedByUser,
+	finishQuiz
 }
