@@ -122,7 +122,7 @@ class Collection {
 		else {
 			this.collection.update(
 				{'email' : filter},
-				{ $push : { [attributeName]: newAttribute } },
+				{ $set : { [`${attributeName}.${Object.keys(newAttribute)[0]}`]: Object.values(newAttribute)[0] } },
 				{ upsert : true },
 				(error, Response) => {
 					if(!error) {

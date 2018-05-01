@@ -59,21 +59,6 @@ const _decodePass = (text, pass) => {
 	return bcrypt.verifyText(text, pass);
 };
 
-const _findInDbArray = (quiz,filter) => {
-	let defer = q.defer();
-	
-	var index = quiz.find(function(quizObj, i){
-	  if(quizObj.quizID === filter){
-	    defer.resolve(true)
-	  }
-	  else {
-	  	defer.resolve(false);
-	  }
-	});
-
-	return defer.promise;
-};
-
 const register = (req, res) => {
 	let response = {
 		"success": false,
@@ -348,38 +333,27 @@ const finishQuiz = (req, res) => {
 		.then(resp => {
 			if(resp) {
 				let dataForTakenCollection = {
-					"quizID" : req.body.quizID,
-					"quizName" : req.body.quizName,
-					"score" : req.body.score,
-					"quizMaker" : req.body.quizMaker
+					[req.body.quizID] : {
+						"quizName" : req.body.quizName,
+						"score" : req.body.score	
+					}
 				}
-
-				_findInDbArray(resp[0].quizes, req.body.quizID)
-					.then(resp => {
-						if(!resp) {
-							return _updateDB(takenQuiz, req.body.data, 'quizes', dataForTakenCollection, true)	
-						}
-					})
-					.catch(error => {
-						console.log(error);
-					})
+				
+				return _updateDB(takenQuiz, req.body.data, 'quizes', dataForTakenCollection, true)	
+				
 			}
 			else {
 				let data = {
 					"email": req.body.data,
-					"quizes": [{
-						"quizID" : req.body.quizID,
-						"quizName" : req.body.quizName,
-						"score" : req.body.score,
-						"quizMaker" : req.body.quizMaker
-					}]
+					"quizes": {
+						[req.body.quizID] : {
+							"quizName" : req.body.quizName,
+							"score" : req.body.score	
+						}
+					}
 				}
 				return _writeToDB(takenQuiz, data)
 			}	
-		})
-		.then(() => {
-			//add quiz takers email id to quiz creators collection
-			return 
 		})
 		.then(() => {
 			response = {
@@ -390,6 +364,7 @@ const finishQuiz = (req, res) => {
 			res.status(200).json(response);
 		})
 		.catch(error => {
+			console.log(error);
 			response = {
 				...response,
 				"message": "Score update failed"

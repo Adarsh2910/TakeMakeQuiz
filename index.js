@@ -40,7 +40,7 @@ app.get('/', function(req, res) {
 
 app.get('/takeMake', function(req, res) {
     if(req.cookies.token) {
-        res.sendFile(path.join(__dirname + '/takemake.html'));
+    res.sendFile(path.join(__dirname + '/takemake.html'));
     }
     else {
         res.redirect('/');    
