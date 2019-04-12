@@ -200,11 +200,11 @@ const addQuiz = (req, res) => {
 	};
 
 	let dataForUserQuizCollection = {
-		"quizId" : quizId,
-		"quizName" : req.body.quizName,
-		"quizMaker" : req.body.data,
-		"people" : []
-	};
+		[quizId] : {
+			"quizName" : req.body.quizName,
+			"quizMaker" : req.body.data
+		}
+	}
 
 	_writeToDB(quiz, dataForQuizCollection)
 			return _updateDB(userQuiz, req.body.data, "quizes", dataForUserQuizCollection , true)

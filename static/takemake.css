@@ -1,0 +1,386 @@
+body{
+		width: 100%;
+		height: 100vh;
+		background-image: url("background.jpg");
+		background-repeat: none;
+	}
+
+h1{
+	font-family: chalkboard;
+	text-align: center;
+	
+	
+   
+}
+
+::placeholder{
+	color: red;
+	opacity: 0.7;
+	font-size: 16px;
+}
+
+
+#quizerror, #timeerror{
+	color: red;
+	text-align: center;
+	font-family: chalkboard;
+	}
+
+.navbar{
+	background-color: #1A1919;
+	border-radius: 0px;
+
+}
+.navbar-header, .pull-right{
+	color: #ffffff;
+	margin-top: 0.5%;
+	margin-left: 16px;
+	margin-right: 16px;
+	font-family: chalkboard;
+	font-size: 20px;
+	text-decoration: none !important;
+
+}
+.pull-right:hover{
+	color: #fff !important;
+}
+
+.option{
+	background-color: #E0E0E0;
+	margin-top: 10vh;
+	width: 40%;
+	height:40vh;
+	border-radius: 20px;
+    box-shadow: 0 0 5px 5px #808080;
+
+}
+.take{
+	margin-left: 40%;
+	margin-top:10vh;
+	background-color: #fff;
+	color: #1A1919;
+	font-size: 20px;
+	width: 20%;
+	font-family: chalkboard;
+	border: none;
+
+}
+.make{
+	margin-left: 40%;
+	margin-top:10vh;
+	background-color: #1A1919;
+	color: #ffffff;
+	font-size: 20px;
+	width: 20%;
+	font-family: chalkboard;
+	border: none;
+}
+.take:hover{
+	background-color: #1A1919;
+}
+.make:hover{
+	background-color: #fff;
+	color: #1A1919;
+}
+
+.cardname{
+	background-color: grey;
+	box-shadow: 0 10px 30px 0 #808080;
+    transition: 0.3s;
+    width: 20%;
+    border-radius: 14px;
+    margin-top: 4%;
+    margin-left: 50px;
+    padding: 0px;
+    color: #1A1919;
+    font-family: chalkboard;
+    height: 20vh;
+
+}
+
+.cardnamee{
+	background-color: #fff;
+	box-shadow: 0 10px 30px 0 #808080;
+    transition: 0.3s;
+    width: 20%;
+    border-radius: 14px;
+    margin-top: 4%;
+    margin-left: 50px;
+    padding: 0px;
+    color: #1A1919;
+    font-family: chalkboard;
+    height: 20vh;
+
+}
+
+.cardtakenew{
+	background-color: #fff;
+	box-shadow: 0 10px 30px 0 #808080;
+    transition: 0.3s;
+    width: 20%;
+    border-radius: 14px;
+    margin-top: 4%;
+    margin-left: 50px;
+    padding: 0px;
+    color: #1A1919;
+    font-family: chalkboard;
+    height: 20vh;
+
+}
+
+
+#takencard{
+	margin-left: 1%;
+}
+
+.cardname h2 , .cardnamee h2 , .cardtakenew h2{ 
+	font-size: 20px%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 25%;
+	text-align: center;
+	margin-top: 20%;
+}
+
+.cardname h5{
+	float: center;
+    font-size: 18px;
+	text-align: center;
+
+}
+
+#takenewquiz{
+
+	background-color: black;
+}
+#nextbutton{
+	background-color: black;
+}
+#previousbutton{
+	background-color: black;
+}
+
+#makequiz{
+	margin-left: 20%;
+	margin-right: 20%;
+
+}
+.modal-content{
+	background-color:#1A1919 ;
+	color: #fff;
+}
+
+
+#opt1{
+	font-size: 20px;
+	margin-left: 5px;
+}
+
+#opt2{
+	font-size: 20px;
+	margin-left: 7px;
+}
+#opt3{
+	font-size: 20px;
+	margin-left: 8px;
+}
+#opt4{
+	font-size: 20px;
+	margin-left: 10px;
+}
+
+#makenew{
+	background-color: black;
+	position: fixed;
+	outline: none;
+	border-color: black;
+	    width: 60px;
+	    z-index: 3;
+}
+
+.modal-dailog{
+	margin-top: 250px !important;
+}
+
+.questmake{
+	border: 0px;
+outline: none;
+border-bottom: 1px solid grey;
+font-family: chalkboard;
+font-size: 25px;
+margin-top: 2%;
+}
+
+.enterquest{
+	background-color: #E0E0E0;
+	margin-top: 10vh;
+	width: 100%;
+	height:60vh;
+	border-radius: 10px;
+    box-shadow: 0 0 5px 5px #808080;
+
+}
+
+.formhide{
+	padding-top: 10px;
+}
+
+.close{
+	color: #fff !important;
+}
+
+.rowed{
+	margin-right: 130px !important;
+	margin: 0px;
+}
+
+.displaycard{
+	margin-left: 16px;
+	
+	width: 100%;
+
+}
+
+#takenewquiz{
+	position: fixed;
+	width: 60px;
+	font-size: 25px;
+	text-align: center;
+	z-index: 3;
+}
+
+.overlay {
+border: none;
+outline: 0;
+display: inline-block;
+padding: 8px;
+color: white;
+background-color: #1A1919;
+text-align: center;
+cursor: pointer;
+width: 100%;
+font-size: 18px;
+}
+
+.retakeButton{
+	background-color: black;
+	color: #fff;
+}
+.loadmore{
+	margin-top: 2%;
+	margin-left: 46.5%;
+}
+
+#takequiz{
+	background-color: #E0E0E0;
+	margin-top: 20vh;
+	width: 50%;
+	height:40vh;
+	border-radius: 10px;
+    box-shadow: 0 0 5px 5px #808080;
+}
+
+#nextquestbutton{
+	background-color: #1A1919 !important;
+	border-color: #1A1919;
+	outline: none;
+	height: 40px;
+
+}
+
+.dot {
+    height: 450px;
+    width: 450px;
+    background-color: #bbb;
+    border-radius: 50%;
+    align-items: center;
+ 	justify-content: center;
+ 	margin-left: 35%;
+ 	margin-top: 8%;
+ 	box-shadow: 0 0 10px 10px #808080;
+}
+ .resultsHeading{
+ 	margin-top: 10%;
+    height: 139px;
+    position: absolute;
+    z-index: 3;
+    margin-left: 8%;
+ }
+
+
+#displayresults{
+	font-size: 145px;
+	margin-left: 13%;
+	color: green;
+}
+
+#timer{
+	background-color: #E0E0E0;
+	float: right !important;
+	border-spacing: 5px;
+	font-family: chalkboard;
+	font-size: 20px;
+	text-align:center;
+	color: red;
+}
+
+.Quizestaken{
+	font-family: chalkboard;
+
+}
+
+
+#queslabel{
+	font-size: 50px;
+	font-family: chalkboard;
+	text-align: center;
+}
+.optlabel{
+	font-size: 20px;
+	font-family: chalkboard;
+}
+#questionname{
+	font-family: chalkboard;
+	font-size: 30px;
+	border-radius: 5px;
+	width: 80%;
+	height: 4vh;
+	border-bottom: 3px solid black;
+	background-color: transparent;
+
+}
+
+.questmake{
+	border-radius: 5px;
+	font-size: 20px;
+}
+#corrans{
+	font-family: chalkboard;
+	font-size: 18px;
+}
+
+#nextQuestion{
+	font-family: chalkboard;
+	background-color: #1A1919;
+	width: 50%;
+
+}
+#addQuestion{
+	margin-top: 25vh;
+	font-size: 200%;
+	margin-left: -50%;
+	font-family: chalkboard;
+}
+
+#finishmaking{
+	margin-top: 25vh;
+	font-size: 200%;
+	width: 100%;
+	font-family: chalkboard;
+}
+
+#successmessage{
+	margin-top :33vh;
+	font-size: 500%;
+}

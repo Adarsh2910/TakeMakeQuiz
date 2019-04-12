@@ -1,0 +1,71 @@
+<!doctype html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<link rel="stylesheet" type="text/css" href="login.css">
+</head>
+<body>
+<div class="container">
+
+	<div class="container left">
+		<h3>TAKEMAKE </br>QUIZ</h3>
+	</div>
+	<div class="container login">
+		<h2>Login</h2>
+		<form class="signup text-center">
+			<label>Email</label></br>
+			<input type="text"  id="logemail" required></br>
+			<label>Password</label></br>
+			<input type="password"  id="password" required></br>
+			<div class="errordiv">
+                
+                  <h5 class="adminerrormessage" >Incorrect ID or Password</h5>
+                
+              </div>
+              	<div class="errordiv1">
+                
+                  <h5 class="adminerrormessage" > Please do not leave any fields blank!</h5>
+                </div>
+		</form>
+		<div class="row butblock">
+				<div class="col-sm-6">
+			<button class="  btn btn-primary logbut" id="logbut">Login</button>
+		
+				</div>
+			<div class="col-sm-5 not">
+			<a href="" id="register">Not registered yet?</a>
+			</div>
+			</div>
+			 
+	</div>
+
+	<div class="container right">
+		<h2>Sign Up</h2>
+		<form class="signup text-center">
+			<label>Username</label></br> 
+			<input type="text"   id="username" required></br>
+			<label>Email</label></br>
+			<input type="text"  id="email" onblur="validateEmail()" required></br>
+			<div id="checkmail"></div>
+			<label>Password</label></br>
+			<input type="password"  id="regpassword" required></br>
+			<div id="checkpass"></div>
+			<label>Confirm password</label></br>
+			<input type="password"  id="conpassword" required></br>
+			<a id="checkpass"></a>
+			<div class="row butblock">
+				<div class="col-sm-6">
+			<button class="  btn btn-primary regbut" id="regbut">Register</button>
+				</div>
+			<div class="col-sm-5 not">
+			<a href="" id="loginbut">Already a member?</a>
+			</div>
+			</div>
+		</form>
+	</div>
+</div>
+<script src="main.js"></script>
+</body>
+</html>
