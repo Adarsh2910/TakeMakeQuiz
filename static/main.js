@@ -144,7 +144,7 @@ $('[data-toggle="tooltip"]').tooltip();
 		}
 	 	$.ajax({	
 		 	type: 'POST',
-		 	url: 'http://35.200.215.21/user/register',
+		 	url: 'http://35.200.242.164/user/register',
 		 	data: formData,
 		 	datatype: 'json',
 		 	encode: 'true',
@@ -184,7 +184,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
 		$.ajax({	
 			type: 'POST',
-			url: 'http://35.200.215.21/user/login',
+			url: 'http://35.200.242.164/user/login',
 			data: formData,
 			datatype: 'json',
 			encode: 'true',
@@ -222,7 +222,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
 		$.ajax({
 			type: 'GET',
-		 	url: 'http://http://35.200.215.21/user/quiz/taken/fetch',
+		 	url: 'http://35.200.242.164/user/quiz/taken/fetch',
 		}).done(function(response){
 		
 			if(response.success == false){
@@ -280,7 +280,7 @@ $('[data-toggle="tooltip"]').tooltip();
 	function showQuizes(offset) {
 		$.ajax({
 			type: 'GET',
-		 	url: 'http://http://35.200.215.21/user/quiz/fetch/?offset='+offset,
+		 	url: 'http://35.200.242.164/user/quiz/fetch/?offset='+offset,
 		}).done(function(res) {
 			
 			$('.cardname').css("display", "none");
@@ -314,7 +314,7 @@ $('[data-toggle="tooltip"]').tooltip();
 					
 					$.ajax({
 						type: 'POST',
-					 	url: 'http://http://35.200.215.21/user/quiz/take',
+					 	url: 'http://35.200.242.164/user/quiz/take',
 					 	data: {quizID : quizid},
 					 	datatype: 'json',
 						encode: 'true',
@@ -348,7 +348,7 @@ $('[data-toggle="tooltip"]').tooltip();
 					if(!store.isFinish()) {
 						$.ajax({
 							type: 'POST',
-						 	url: 'http://http://35.200.215.21/user/quiz/finish',
+						 	url: 'http://35.200.242.164/user/quiz/finish',
 						 	data: {
 						 		score : store.getScore(),
 						 		quizName: store.getQuizName(),
@@ -404,7 +404,7 @@ $('[data-toggle="tooltip"]').tooltip();
 			$('#resultsHeading').css("display", "block");
 			$.ajax({
 				type: 'POST',
-			 	url: 'http://35.200.215.21/user/quiz/finish',
+			 	url: 'http://35.200.242.164/user/quiz/finish',
 			 	data: {
 			 		score : store.getScore(),
 			 		quizName: store.getQuizName(),
@@ -532,7 +532,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
 		$.ajax({
 			type: 'POST',
-			url: 'http://35.200.215.21/user/quiz/add',
+			url: 'http://35.200.242.164/user/quiz/add',
 		 	data: formData,
 		 	datatype: 'json',
 		 	encode: 'true',
@@ -555,7 +555,7 @@ $('[data-toggle="tooltip"]').tooltip();
 
 		$.ajax({
 			type: 'GET',
-		 	url: 'http://35.200.215.21//user/quiz/created/fetch',
+		 	url: 'http://35.200.242.164/user/quiz/created/fetch',
 		}).done(function(response){
 			
 			if(response.success == false){
